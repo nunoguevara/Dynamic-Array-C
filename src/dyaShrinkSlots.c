@@ -4,21 +4,25 @@
 
 // Reallocate the array
 // It reduces unused allocated capacity
-enum DyaStatus dyaCleanSlots(struct DyaArray *arr) {
+enum DyaStatus dyaShrinkSlots(struct DyaArray *arr) {
   
   if (arr == NULL) {
     return DYA_ARRAY_INVALID_ARGUMENT;
   }
-
-  if (arr->length > arr->capacity) {
+  
+  if (arr->data == NULL && arr->capacity > 0) {
     return DYA_ARRAY_INVALID_STATE;
   }
   
-  if (arr->capacity <= arr->length) {     
-    return DYA_ARRAY_NOTHING_TO_CLEAN;  
+  if (arr->data != NULL && arr->capacity == 0) {
+    return DYA_ARRAY_INVALID_STATE;
+  }
+  
+  if (arr->length > arr->capacity) {
+    return DYA_ARRAY_INVALID_STATE;
   }
 
-  if (arr->length >= SIZE_MAX) {
+  if (arr->length == SIZE_MAX) {
     return DYA_ARRAY_OVERFLOW;
   }
   //Leave a slot to spare (intentional)
@@ -26,6 +30,10 @@ enum DyaStatus dyaCleanSlots(struct DyaArray *arr) {
 
   if (clean_size > SIZE_MAX / sizeof(int)) {
     return DYA_ARRAY_OVERFLOW;
+  }
+
+  if (clean_size >= arr->capacity) {
+    return DYA_ARRAY_NOTHING_TO_CLEAN;
   }
   
   int *ptr = realloc(arr->data, clean_size * sizeof(int));

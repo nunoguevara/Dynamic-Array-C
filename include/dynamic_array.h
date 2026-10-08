@@ -20,6 +20,6 @@ struct DyaArray {
 };
 
 enum DyaStatus dyaAppend(struct DyaArray *arr, int value);
-enum DyaStatus dyaClean(struct DyaArray *arr);
+enum DyaStatus dyaShrinkSlots(struct DyaArray *arr);
 
 #endif
