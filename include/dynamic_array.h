@@ -21,5 +21,6 @@ struct DyaArray {
 
 enum DyaStatus dyaAppend(struct DyaArray *arr, int value);
 enum DyaStatus dyaShrinkSlots(struct DyaArray *arr);
+enum DyaStatus dyaDestroy(struct DyaArray *arr);
 
 #endif
