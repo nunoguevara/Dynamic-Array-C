@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include "dynamic_array.h"
 
@@ -13,6 +13,7 @@ enum DyaStatus dyaCleanSlots(struct DyaArray *arr) {
   if (arr->length > arr->capacity) {
     return DYA_ARRAY_INVALID_STATE;
   }
+  
   if (arr->capacity <= arr->length) {     
     return DYA_ARRAY_NOTHING_TO_CLEAN;  
   }

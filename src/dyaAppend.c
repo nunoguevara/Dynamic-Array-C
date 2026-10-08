@@ -1,10 +1,22 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "dynamic_array.h"
 
 enum DyaStatus dyaAppend(struct DyaArray *arr, int value) {
   
   if (arr == NULL) {
+    return DYA_ARRAY_INVALID_ARGUMENT;
+  }
+
+  if (arr->length > arr->capacity) {
+    return DYA_ARRAY_INVALID_STATE;
+  }
+
+  if (arr->data == NULL && arr->capacity > 0) {
+    return DYA_ARRAY_INVALID_STATE;
+  }
+
+  if (arr->data != NULL && arr->capacity == 0) {
     return DYA_ARRAY_INVALID_STATE;
   }
   
@@ -14,11 +26,23 @@ enum DyaStatus dyaAppend(struct DyaArray *arr, int value) {
     return DYA_ARRAY_OK;
   }
 
+  size_t new_capacity;
+  
   if (arr->capacity == 0) {
-    arr->capacity = 1;
+    new_capacity = 1;
   }
 
-  size_t new_capacity = arr->capacity * 2;
+  if (arr->capacity > SIZE_MAX / 2) {
+    return DYA_ARRAY_OVERFLOW;
+  }
+
+  if (arr->capacity != 0) {
+    new_capacity = arr->capacity * 2;
+  }
+
+  if (new_capacity > SIZE_MAX / sizeof(int)) {
+    return DYA_ARRAY_OVERFLOW;
+  }
   
   int *ptr = realloc(arr->data, new_capacity * sizeof(int));
   
